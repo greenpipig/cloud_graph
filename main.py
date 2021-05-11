@@ -3,12 +3,28 @@ import numpy as np
 from PIL import Image
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://s.weibo.com/top/summary?Refer=top_hot&topnav=1&wvr=6'
 
 if __name__ == '__main__':
-    # 导入文本数据并进行简单的文本处理
-    # 去掉换行符和空格
+    # 微博爬虫
+    r = requests.get(url)
+    r.raise_for_status()
+    r.encoding = r.apparent_encoding
+    soup = BeautifulSoup(r.text, 'html.parser')
+    data = soup.find_all('a')
+    d_list = []
+    for item in data:
+        d_list.append(item.text)
+    words = d_list[4:-11:]
+    # 中文分词
+    with open('./data/test.txt', 'w') as f:
+        f.write('\n'.join(words))
+
     text = open("./data/test.txt", encoding='utf8').read()
-    text = text.replace('\n', "").replace("\u3000", "")
+    text = text.replace('\n', "")
     # 分词，返回结果为词的列表
     text_cut = jieba.lcut(text)
     # 将分好的词用某个符号分割开连成字符串
