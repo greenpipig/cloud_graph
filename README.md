@@ -3,5 +3,5 @@
 
 爬取微博热搜并生成云图
 
-![avatar](./test.png)
+![avatar](cloud_graph.png)
 
